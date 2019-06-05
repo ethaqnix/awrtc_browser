@@ -35,112 +35,112 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /// avoid firewalls.
 /// </summary>
 export class MediaConfig {
-    private mAudio: boolean = true;
-    public get Audio(): boolean {
-        return this.mAudio;
-    }
-    public set Audio(value: boolean) {
-        this.mAudio = value;
-    }
+  private mAudio: boolean = true;
+  public get Audio(): boolean {
+    return this.mAudio;
+  }
+  public set Audio(value: boolean) {
+    this.mAudio = value;
+  }
 
-    private mVideo: boolean = true;
-    public get Video(): boolean {
-        return this.mVideo;
-    }
-    public set Video(value: boolean) {
-        this.mVideo = value;
-    }
-    
+  private mVideo: boolean = true;
+  public get Video(): boolean {
+    return this.mVideo;
+  }
+  public set Video(value: boolean) {
+    this.mVideo = value;
+  }
 
-    private mVideoDeviceName : string = "";
-    public get VideoDeviceName(): string {
-        return this.mVideoDeviceName;
-    }
-    public set VideoDeviceName(value: string) {
-        this.mVideoDeviceName = value;
-    }
 
-    private mMinWidth = -1;
-    public get MinWidth(): number {
-        return this.mMinWidth;
-    }
-    public set MinWidth(value: number) {
-        this.mMinWidth = value;
-    }
+  private mVideoDeviceName: string = "";
+  public get VideoDeviceName(): string {
+    return this.mVideoDeviceName;
+  }
+  public set VideoDeviceName(value: string) {
+    this.mVideoDeviceName = value;
+  }
 
-    private mMinHeight = -1;
-    public get MinHeight(): number {
-        return this.mMinHeight;
-    }
-    public set MinHeight(value: number) {
-        this.mMinHeight = value;
-    }
+  private mMinWidth = -1;
+  public get MinWidth(): number {
+    return this.mMinWidth;
+  }
+  public set MinWidth(value: number) {
+    this.mMinWidth = value;
+  }
 
-    private mMaxWidth = -1;
-    public get MaxWidth(): number {
-        return this.mMaxWidth;
-    }
-    public set MaxWidth(value: number) {
-        this.mMaxWidth = value;
-    }
-    private mMaxHeight = -1;
-    public get MaxHeight(): number {
-        return this.mMaxHeight;
-    }
-    public set MaxHeight(value: number) {
-        this.mMaxHeight = value;
-    }
+  private mMinHeight = -1;
+  public get MinHeight(): number {
+    return this.mMinHeight;
+  }
+  public set MinHeight(value: number) {
+    this.mMinHeight = value;
+  }
 
-    private mIdealWidth = -1;
-    public get IdealWidth(): number {
-        return this.mIdealWidth;
-    }
-    public set IdealWidth(value: number) {
-        this.mIdealWidth = value;
-    }
+  private mMaxWidth = -1;
+  public get MaxWidth(): number {
+    return this.mMaxWidth;
+  }
+  public set MaxWidth(value: number) {
+    this.mMaxWidth = value;
+  }
+  private mMaxHeight = -1;
+  public get MaxHeight(): number {
+    return this.mMaxHeight;
+  }
+  public set MaxHeight(value: number) {
+    this.mMaxHeight = value;
+  }
 
-    private mIdealHeight = -1;
-    public get IdealHeight(): number {
-        return this.mIdealHeight;
-    }
-    public set IdealHeight(value: number) {
-        this.mIdealHeight = value;
-    }
+  private mIdealWidth = -1;
+  public get IdealWidth(): number {
+    return this.mIdealWidth;
+  }
+  public set IdealWidth(value: number) {
+    this.mIdealWidth = value;
+  }
 
-    
-    private mMinFps = -1;
-    public get MinFps(): number {
-        return this.mMinFps;
-    }
-    public set MinFps(value: number) {
-        this.mMinFps = value;
-    }
-    
-    private mMaxFps = -1;
-    public get MaxFps(): number {
-        return this.mMaxFps;
-    }
-    public set MaxFps(value: number) {
-        this.mMaxFps = value;
-    }
-    
-    private mIdealFps = -1;
-    public get IdealFps(): number {
-        return this.mIdealFps;
-    }
-    public set IdealFps(value: number) {
-        this.mIdealFps = value;
-    }
+  private mIdealHeight = -1;
+  public get IdealHeight(): number {
+    return this.mIdealHeight;
+  }
+  public set IdealHeight(value: number) {
+    this.mIdealHeight = value;
+  }
 
-    private mFrameUpdates = false;
 
-    /** false - frame updates aren't generated. Useful for browser mode
-     *  true  - library will deliver frames as ByteArray
-    */
-    public get FrameUpdates(): boolean {
-        return this.mFrameUpdates;
-    }
-    public set FrameUpdates(value: boolean) {
-        this.mFrameUpdates = value;
-    }
+  private mMinFps = -1;
+  public get MinFps(): number {
+    return this.mMinFps;
+  }
+  public set MinFps(value: number) {
+    this.mMinFps = value;
+  }
+
+  private mMaxFps = -1;
+  public get MaxFps(): number {
+    return this.mMaxFps;
+  }
+  public set MaxFps(value: number) {
+    this.mMaxFps = value;
+  }
+
+  private mIdealFps = -1;
+  public get IdealFps(): number {
+    return this.mIdealFps;
+  }
+  public set IdealFps(value: number) {
+    this.mIdealFps = value;
+  }
+
+  private mFrameUpdates = false;
+
+  /** false - frame updates aren't generated. Useful for RN mode
+   *  true  - library will deliver frames as ByteArray
+  */
+  public get FrameUpdates(): boolean {
+    return this.mFrameUpdates;
+  }
+  public set FrameUpdates(value: boolean) {
+    this.mFrameUpdates = value;
+  }
 }

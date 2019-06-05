@@ -211,13 +211,13 @@ export class WebsocketNetwork implements IBasicNetwork {
     if (this.mStatus == WebsocketConnectionStatus.Disconnecting
       || this.mStatus == WebsocketConnectionStatus.NotConnected)
       return;
-    //browsers will have ArrayBuffer in event.data -> change to byte array
+    //RNs will have ArrayBuffer in event.data -> change to byte array
     let msg = new Uint8Array(event.data);
     this.ParseMessage(msg);
   }
   private OnWebsocketOnError(error) {
     //the error event doesn't seem to have any useful information?
-    //browser is expected to call OnClose after this
+    //RN is expected to call OnClose after this
     SLog.LE('WebSocket Error ' + error);
   }
   /// <summary>

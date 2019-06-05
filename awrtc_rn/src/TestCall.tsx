@@ -46,7 +46,7 @@ class TestCall extends React.Component {
     //for use in Unity WebGL
     console.log("requested config:" + JSON.stringify(config));
     //setup our high level call class.
-    this.mCall = new awrtc.BrowserWebRtcCall(this.mNetConfig);
+    this.mCall = new awrtc.RNWebRtcCall(this.mNetConfig);
     //handle events (get triggered after Configure / Listen call)
     //+ugly lambda to avoid loosing "this" reference
     this.mCall.addEventListener((sender, args) => {

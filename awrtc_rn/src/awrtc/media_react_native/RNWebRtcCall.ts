@@ -1,3 +1,7 @@
+﻿import { RNMediaNetwork } from './RNMediaNetwork';
+import { AWebRtcCall } from '../media/AWebRtcCall';
+import { IMediaNetwork } from '../media/IMediaNetwork';
+import { NetworkConfig } from '../media/NetworkConfig';
 /*
 Copyright (c) 2019, because-why-not.com Limited
 All rights reserved.
@@ -27,8 +31,30 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-export * from './BrowserMediaNetwork'
-export * from './BrowserWebRtcCall'
-export * from './BrowserMediaStream'
-export * from './MediaPeer'
-export * from './DeviceApi'
+
+/**RN version of the C# version of WebRtcCall. 
+ * 
+ * See ICall interface for detailed documentation. 
+ * RNWebRtcCall mainly exists to allow other versions 
+ * in the future that might build on a different IMediaNetwork
+ * interface (Maybe something running inside Webassembly?).
+ */
+export class RNWebRtcCall extends AWebRtcCall {
+  public constructor(config: NetworkConfig) {
+    super(config);
+    this.Initialize(this.CreateNetwork());
+  }
+
+  private CreateNetwork(): IMediaNetwork {
+
+    return new RNMediaNetwork(this.mNetworkConfig);
+  }
+  protected DisposeInternal(disposing: boolean): void {
+    super.DisposeInternal(disposing);
+    if (disposing) {
+      if (this.mNetwork != null)
+        this.mNetwork.Dispose();
+      this.mNetwork = null;
+    }
+  }
+}

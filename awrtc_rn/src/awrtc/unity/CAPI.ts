@@ -1,10 +1,10 @@
 ﻿import { mediaDevices } from 'react-native-webrtc';
 import {
-  BrowserMediaNetwork,
-  BrowserMediaStream,
-  BrowserWebRtcCall,
-  DeviceApi
-  } from '../media_browser/index';
+  DeviceApi,
+  RNMediaNetwork,
+  RNMediaStream,
+  RNWebRtcCall
+  } from '../media_RN/index';
 import { MediaConfig, MediaConfigurationState, NetworkConfig } from '../media/index';
 import {
   ConnectionId,
@@ -44,7 +44,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-/**This file contains the mapping between the awrtc_browser library and
+/**This file contains the mapping between the awrtc_RN library and
  * Unitys WebGL support. Not needed for regular use.
  */
 
@@ -53,7 +53,7 @@ var CAPI_InitMode = {
   //Original mode. Devices will be unknown after startup
   Default: 0,
   //Waits for the desvice info to come in
-  //names might be missing though (browser security thing)
+  //names might be missing though (RN security thing)
   WaitForDevices: 1,
   //Asks the user for camera / audio access to be able to
   //get accurate device information
@@ -127,7 +127,7 @@ export function CAPI_WebRtcNetwork_IsAvailable() {
 }
 
 
-export function CAPI_WebRtcNetwork_IsBrowserSupported() {
+export function CAPI_WebRtcNetwork_IsRNSupported() {
   if (RTCPeerConnection && RTCDataChannel)
     return true;
 
@@ -336,7 +336,7 @@ export function CAPI_WebRtcNetwork_PeekEm(lIndex: number, lTypeIntArray: Int32Ar
 
 export function CAPI_MediaNetwork_IsAvailable(): boolean {
 
-  if (BrowserMediaNetwork && BrowserWebRtcCall)
+  if (RNMediaNetwork && RNWebRtcCall)
     return true;
   return false;
 }
@@ -352,7 +352,7 @@ export function CAPI_MediaNetwork_Create(lJsonConfiguration): number {
   let config = new NetworkConfig();
   config = JSON.parse(lJsonConfiguration);
 
-  let mediaNetwork = new BrowserMediaNetwork(config);
+  let mediaNetwork = new RNMediaNetwork(config);
 
   var lIndex = gCAPI_WebRtcNetwork_InstancesNextIndex;
   gCAPI_WebRtcNetwork_InstancesNextIndex++;
@@ -392,28 +392,28 @@ export function CAPI_MediaNetwork_Configure(lIndex: number, audio: boolean, vide
 
   config.FrameUpdates = true;
 
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   mediaNetwork.Configure(config);
 
 }
 //GetConfigurationState(): MediaConfigurationState;
 export function CAPI_MediaNetwork_GetConfigurationState(lIndex: number): number {
 
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   return mediaNetwork.GetConfigurationState() as number;
 }
 
 //Note: not yet glued to the C# version!
 //GetConfigurationError(): string;
 export function CAPI_MediaNetwork_GetConfigurationError(lIndex: number): string {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   return mediaNetwork.GetConfigurationError();
 
 }
 
 //ResetConfiguration(): void;
 export function CAPI_MediaNetwork_ResetConfiguration(lIndex: number): void {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   return mediaNetwork.ResetConfiguration();
 }
 
@@ -422,7 +422,7 @@ export function CAPI_MediaNetwork_TryGetFrame(lIndex: number, lConnectionId: num
   lWidthInt32Array: Int32Array, lWidthIntArrayIndex: number,
   lHeightInt32Array: Int32Array, lHeightIntArrayIndex: number,
   lBufferUint8Array: Uint8Array, lBufferUint8ArrayOffset: number, lBufferUint8ArrayLength: number): boolean {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   let frame = mediaNetwork.TryGetFrame(new ConnectionId(lConnectionId));
 
   if (frame == null || frame.Buffer == null) {
@@ -443,7 +443,7 @@ export function CAPI_MediaNetwork_TryGetFrame(lIndex: number, lConnectionId: num
 
 //Returns the frame buffer size or -1 if no frame is available
 export function CAPI_MediaNetwork_TryGetFrameDataLength(lIndex: number, connectionId: number): number {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   let frame = mediaNetwork.PeekFrame(new ConnectionId(connectionId));
 
   let length: number = -1;
@@ -459,27 +459,27 @@ export function CAPI_MediaNetwork_TryGetFrameDataLength(lIndex: number, connecti
 }
 export function CAPI_MediaNetwork_SetVolume(lIndex: number, volume: number, connectionId: number): void {
 
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   mediaNetwork.SetVolume(volume, new ConnectionId(connectionId));
 }
 
 export function CAPI_MediaNetwork_HasAudioTrack(lIndex: number, connectionId: number): boolean {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   return mediaNetwork.HasAudioTrack(new ConnectionId(connectionId));
 }
 export function CAPI_MediaNetwork_HasVideoTrack(lIndex: number, connectionId: number): boolean {
 
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   return mediaNetwork.HasVideoTrack(new ConnectionId(connectionId));
 }
 
 export function CAPI_MediaNetwork_SetMute(lIndex: number, value: boolean) {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   mediaNetwork.SetMute(value);
 }
 
 export function CAPI_MediaNetwork_IsMute(lIndex: number) {
-  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as BrowserMediaNetwork;
+  let mediaNetwork = gCAPI_WebRtcNetwork_Instances[lIndex] as RNMediaNetwork;
   return mediaNetwork.IsMute();
 }
 

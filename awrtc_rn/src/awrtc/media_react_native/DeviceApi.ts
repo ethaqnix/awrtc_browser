@@ -189,9 +189,9 @@ export class DeviceApi {
       DeviceApi.InternalOnErrorString("Can't access mediaDevices or enumerateDevices");
     }
   }
-  /**Checks if the API is available in the browser.
-   * false - browser doesn't support this API
-   * true - browser supports the API (might still refuse to give
+  /**Checks if the API is available in the RN.
+   * false - RN doesn't support this API
+   * true - RN supports the API (might still refuse to give
    * us access later on)
    */
   public static IsApiAvailable(): boolean {

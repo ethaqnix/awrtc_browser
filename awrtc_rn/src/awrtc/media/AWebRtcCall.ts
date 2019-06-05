@@ -17,7 +17,7 @@ import { IMediaNetwork, MediaConfigurationState, MediaEvent } from './IMediaNetw
 import { MediaConfig } from './MediaConfig';
 import { NetworkConfig } from './NetworkConfig';
 import { IFrameData } from './RawFrame';
-import { BrowserMediaNetwork } from '../media_browser/BrowserMediaNetwork';
+import { RNMediaNetwork } from '../media_RN/RNMediaNetwork';
 import { Encoding, SLog } from '../network/Helper';
 import { ConnectionId, NetEventType, NetworkEvent } from '../network/index';
 /*

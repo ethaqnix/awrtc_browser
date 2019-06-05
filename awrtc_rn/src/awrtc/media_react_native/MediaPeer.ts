@@ -1,4 +1,4 @@
-﻿import { BrowserMediaStream } from './BrowserMediaStream';
+﻿import { RNMediaStream } from './RNMediaStream';
 import { IFrameData } from '../media/RawFrame';
 import { SLog, WebRtcDataPeer } from '../network/index';
 /*
@@ -44,10 +44,10 @@ export interface RTCPeerConnectionObsolete extends RTCPeerConnection {
 
 
 export class MediaPeer extends WebRtcDataPeer {
-  private mRemoteStream: BrowserMediaStream = null;
+  private mRemoteStream: RNMediaStream = null;
   //quick workaround to allow html user to get the HTMLVideoElement once it is
   //created. Might be done via events later to make wrapping to unity/emscripten possible
-  public InternalStreamAdded: (peer: MediaPeer, stream: BrowserMediaStream) => void = null;
+  public InternalStreamAdded: (peer: MediaPeer, stream: RNMediaStream) => void = null;
 
   //true - will use obsolete onstream / add stream
   //false - will use ontrack / addtrack (seems to work fine now even on chrome)
@@ -56,13 +56,13 @@ export class MediaPeer extends WebRtcDataPeer {
 
   protected OnSetup(): void {
     super.OnSetup();
-    //TODO: test in different browsers if boolean works now
+    //TODO: test in different RNs if boolean works now
     //this is unclear in the API. according to typescript they are boolean, in native code they are int
-    //and some browser failed in the past if boolean was used ... 
+    //and some RN failed in the past if boolean was used ... 
     this.mOfferOptions = { "offerToReceiveAudio": true, "offerToReceiveVideo": true };
 
     if (MediaPeer.sUseObsolete) {
-      SLog.LW("Using obsolete onaddstream as not all browsers support ontrack");
+      SLog.LW("Using obsolete onaddstream as not all RNs support ontrack");
       (this.mPeer as RTCPeerConnectionObsolete).onaddstream = (streamEvent: RTCMediaStreamEvent) => { this.OnAddStream(streamEvent); };
     }
     else {
@@ -93,7 +93,7 @@ export class MediaPeer extends WebRtcDataPeer {
 
   private SetupStream(stream: MediaStream) {
     // etha: modif cause function trigger before being defined
-    this.mRemoteStream = new BrowserMediaStream(stream, (stream) => {
+    this.mRemoteStream = new RNMediaStream(stream, (stream) => {
       console.log('setupStream mediaPeer l-97');
       if (this.InternalStreamAdded != null) {
         this.InternalStreamAdded(this, stream);

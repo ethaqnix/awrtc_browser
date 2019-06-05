@@ -1,7 +1,7 @@
 ﻿import { mediaDevices } from 'react-native-webrtc';
-import { BrowserMediaStream } from './BrowserMediaStream';
 import { DeviceApi } from './DeviceApi';
 import { MediaPeer } from './MediaPeer';
+import { RNMediaStream } from './RNMediaStream';
 import {
   IMediaNetwork,
   MediaConfigurationState,
@@ -52,16 +52,16 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**Avoid using this class directly whenever possible. Use BrowserWebRtcCall instead. 
- * BrowserMediaNetwork might be subject to frequent changes to keep up with changes
+/**Avoid using this class directly whenever possible. Use RNWebRtcCall instead. 
+ * RNMediaNetwork might be subject to frequent changes to keep up with changes
  * in all other platforms.  
  * 
- * IMediaNetwork implementation for the browser. The class is mostly identical with the
+ * IMediaNetwork implementation for the RN. The class is mostly identical with the
  * C# version. Main goal is to have an interface that can easily be wrapped to other
  * programming languages and gives access to basic WebRTC features such as receiving
  * and sending audio and video + signaling via websockets. 
  * 
- * BrowserMediaNetwork can be used to stream a local audio and video track to a group of 
+ * RNMediaNetwork can be used to stream a local audio and video track to a group of 
  * multiple peers and receive remote tracks. The handling of the peers itself
  * remains the same as WebRtcNetwork.
  * Local tracks are created after calling Configure. This will request access from the
@@ -72,21 +72,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
  * 
  */
-export class BrowserMediaNetwork extends WebRtcNetwork implements IMediaNetwork {
+export class RNMediaNetwork extends WebRtcNetwork implements IMediaNetwork {
 
   //media configuration set by the user
   private mMediaConfig: MediaConfig = null;
   //keeps track of audio / video tracks based on local devices
   //will be shared with all connected peers.
-  private mLocalStream: BrowserMediaStream = null;
+  private mLocalStream: RNMediaStream = null;
   private mConfigurationState: MediaConfigurationState = MediaConfigurationState.Invalid;
   private mConfigurationError: string = null;
   private mMediaEvents: Queue<MediaEvent> = new Queue<MediaEvent>();
 
   constructor(config: NetworkConfig) {
 
-    super(BrowserMediaNetwork.BuildSignalingConfig(config.SignalingUrl),
-      BrowserMediaNetwork.BuildRtcConfig(config.IceServers));
+    super(RNMediaNetwork.BuildSignalingConfig(config.SignalingUrl),
+      RNMediaNetwork.BuildRtcConfig(config.IceServers));
     this.mConfigurationState = MediaConfigurationState.NoConfiguration;
   }
 
@@ -107,7 +107,7 @@ export class BrowserMediaNetwork extends WebRtcNetwork implements IMediaNetwork 
     if (config.Audio || config.Video) {
 
       //ugly part starts -> call get user media data (no typescript support)
-      //different browsers have different calls...
+      //different RNs have different calls...
 
       //check  getSupportedConstraints()??? 
       //see https://w3c.github.io/mediacapture-main/getusermedia.html#constrainable-interface
@@ -204,8 +204,8 @@ export class BrowserMediaNetwork extends WebRtcNetwork implements IMediaNetwork 
           DeviceApi.Update();
 
           //call worked -> setup a frame buffer that deals with the rest
-          this.mLocalStream = new BrowserMediaStream(stream as MediaStream, (stream) => {
-            console.log('received stream BrowserMediaNetwork l-208');
+          this.mLocalStream = new RNMediaStream(stream as MediaStream, (stream) => {
+            console.log('received stream RNMediaNetwork l-208');
             this.EnqueueMediaEvent(MediaEventType.StreamAdded, ConnectionId.INVALID, stream/*this.mLocalStream.VideoElement*/);
           });
           /* this.mLocalStream.InternalStreamAdded = (stream) => {
@@ -225,8 +225,8 @@ export class BrowserMediaNetwork extends WebRtcNetwork implements IMediaNetwork 
         });
       } else {
         //no access to media device -> fail
-        let error = "Configuration failed. navigator.mediaDevices is unedfined. The browser might not allow media access." +
-          "Is the page loaded via http or file URL? Some browsers only support https!";
+        let error = "Configuration failed. navigator.mediaDevices is unedfined. The RN might not allow media access." +
+          "Is the page loaded via http or file URL? Some RNs only support https!";
         SLog.LE(error);
         this.OnConfigurationFailed(error);
       }
@@ -425,7 +425,7 @@ export class BrowserMediaNetwork extends WebRtcNetwork implements IMediaNetwork 
     return peer;
   }
 
-  private MediaPeer_InternalMediaStreamAdded = (peer: MediaPeer, stream: BrowserMediaStream): void => {
+  private MediaPeer_InternalMediaStreamAdded = (peer: MediaPeer, stream: RNMediaStream): void => {
     this.EnqueueMediaEvent(MediaEventType.StreamAdded, peer.ConnectionId, stream.VideoElement);
   }
 

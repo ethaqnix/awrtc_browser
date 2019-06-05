@@ -97,7 +97,7 @@ export interface IMediaNetwork extends IWebRtcNetwork {
   HasAudioTrack(id: ConnectionId): boolean;
   HasVideoTrack(id: ConnectionId): boolean;
 
-  //Only used for browser specific events for now
+  //Only used for RN specific events for now
   //Not part of the C# api yet.
   DequeueMediaEvent(): MediaEvent;
 }

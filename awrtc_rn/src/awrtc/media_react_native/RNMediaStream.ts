@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * unity plugin and all other platforms.
  * 
  */
-export class BrowserMediaStream {
+export class RNMediaStream {
 
   //no double buffering in java script as it forces us to create a new frame each time
 
@@ -73,15 +73,15 @@ export class BrowserMediaStream {
   private mIsActive = false;
 
   //Framerate used as a workaround if
-  //the actual framerate is unknown due to browser restrictions
+  //the actual framerate is unknown due to RN restrictions
   public static DEFAULT_FRAMERATE = 25;
-  private mMsPerFrame = 1.0 / BrowserMediaStream.DEFAULT_FRAMERATE * 1000;
+  private mMsPerFrame = 1.0 / RNMediaStream.DEFAULT_FRAMERATE * 1000;
   private mFrameRateKnown = false;
 
   //Time the last frame was generated
   private mLastFrameTime = 0;
 
-  /** Number of the last frame (not yet supported in all browsers)
+  /** Number of the last frame (not yet supported in all RNs)
    * if it remains at <= 0 then we just generate frames based on
    * the timer above
    */
@@ -89,14 +89,14 @@ export class BrowserMediaStream {
 
   private mHasVideo: boolean = false;
 
-  public InternalStreamAdded: (stream: BrowserMediaStream) => void = null;
+  public InternalStreamAdded: (stream: RNMediaStream) => void = null;
 
 
 
   constructor(stream: MediaStream, InternalStreamAdded = null) {
     this.mStream = stream;
-    this.mInstanceId = BrowserMediaStream.sNextInstanceId;
-    BrowserMediaStream.sNextInstanceId++;
+    this.mInstanceId = RNMediaStream.sNextInstanceId;
+    RNMediaStream.sNextInstanceId++;
 
     if (this.mStream.getVideoTracks().length > 0) {
       this.mHasVideo = true;
@@ -121,7 +121,7 @@ export class BrowserMediaStream {
     }
     if (this.mFrameRateKnown === false) {
       //firefox and co won't tell us the FPS for remote stream
-      SLog.LW("Framerate unknown. Using default framerate of " + BrowserMediaStream.DEFAULT_FRAMERATE);
+      SLog.LW("Framerate unknown. Using default framerate of " + RNMediaStream.DEFAULT_FRAMERATE);
 
     }
   }
@@ -166,7 +166,7 @@ export class BrowserMediaStream {
       element.srcObject = this.mStream;
     }
     catch (error) {
-      //old way of doing it. won't work anymore in firefox and possibly other browsers
+      //old way of doing it. won't work anymore in firefox and possibly other RNs
       //this.mVideoElement.src = window.URL.createObjectURL(this.mStream);
     }
   }
@@ -174,7 +174,7 @@ export class BrowserMediaStream {
 
   /** Returns the current frame number.
    *  Treat a return value of 0 or smaller as unknown.
-   * (Browsers might have the property but 
+   * (RNs might have the property but 
    * always return 0)
    */
   private GetFrameNumber(): number {
@@ -241,7 +241,7 @@ export class BrowserMediaStream {
         }
       }
       else {
-        //many browsers do not share the frame info
+        //many RNs do not share the frame info
         //so far we just generate 30 FPS as a work around
         let now = new Date().getTime();
         let div = now - this.mLastFrameTime;
@@ -351,7 +351,7 @@ export class BrowserMediaStream {
     videoElement.controls = true;
     videoElement.id = "awrtc_mediastream_video_" + this.mInstanceId;
     //videoElement.muted = true;
-    /*if (BrowserMediaStream.DEBUG_SHOW_ELEMENTS)
+    /*if (RNMediaStream.DEBUG_SHOW_ELEMENTS)
       document.body.appendChild(videoElement);
     */
     return videoElement;
@@ -370,7 +370,7 @@ export class BrowserMediaStream {
     canvas.id = "awrtc_mediastream_canvas_" + this.mInstanceId;
 
     /*
-    if (BrowserMediaStream.DEBUG_SHOW_ELEMENTS)
+    if (RNMediaStream.DEBUG_SHOW_ELEMENTS)
       document.body.appendChild(canvas);
     */
     return canvas;

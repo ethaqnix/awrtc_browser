@@ -1,4 +1,4 @@
-﻿import { BrowserMediaStream } from '../media_browser/index';
+﻿import { RNMediaStream } from '../media_broRNdex';
 import { SLog } from '../network/Helper';
 /*
 Copyright (c) 2019, because-why-not.com Limited
@@ -63,7 +63,7 @@ export class IFrameData {
 }
 
 //Container for the raw bytes of the current frame + height and width.
-//Format is currently fixed based on the browser getImageData format
+//Format is currently fixed based on the RN getImageData format
 export class RawFrame extends IFrameData {
 
   private mBuffer: Uint8Array = null;
@@ -100,7 +100,7 @@ export class RawFrame extends IFrameData {
  */
 export class LazyFrame extends IFrameData {
 
-  private mFrameGenerator: BrowserMediaStream;
+  private mFrameGenerator: RNMediaStream;
   public get FrameGenerator() {
     return this.mFrameGenerator;
   }
@@ -131,7 +131,7 @@ export class LazyFrame extends IFrameData {
   }
 
 
-  constructor(frameGenerator: BrowserMediaStream) {
+  constructor(frameGenerator: RNMediaStream) {
     super();
     this.mFrameGenerator = frameGenerator;
   }
