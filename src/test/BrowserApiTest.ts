@@ -1,4 +1,5 @@
-﻿/*
+﻿import { mediaDevices } from 'react-native-webrtc';
+/*
 Copyright (c) 2019, because-why-not.com Limited
 All rights reserved.
 
@@ -28,104 +29,101 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 //current setup needs to load everything as a module
-export function some_random_export_1()
-{
+
+export function some_random_export_1() {
 
 }
 describe("BrowserApiTest_MediaStreamApi", () => {
 
-    beforeEach(()=>{
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-    });
+  beforeEach(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+  });
 
-    it("devices", (done) => {
-        navigator.mediaDevices.enumerateDevices()
-        .then(function(devices) 
-        {
+  it("devices", (done) => {
+    mediaDevices.enumerateDevices()
+      .then(function (devices) {
+        expect(devices).not.toBeNull();
+        devices.forEach(function (device) {
+          console.log(device.kind + ": " + device.label +
+            " id = " + device.deviceId);
+        });
+        done();
+      })
+      .catch(function (err) {
+        console.log(err.name + ": " + err.message);
+        fail();
+      });
+  });
+  it("devices2", (done) => {
+    let gStream;
+    let constraints = { video: { deviceId: undefined }, audio: { deviceId: undefined } } as MediaStreamConstraints;
+    mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
+        //if this stream stops the access to labels disapears again after
+        //a few ms (tested in firefox)
+        gStream = stream;
+        mediaDevices.enumerateDevices()
+          .then(function (devices) {
             expect(devices).not.toBeNull();
-            devices.forEach(function(device) {
-                console.log(device.kind + ": " + device.label +
-                            " id = " + device.deviceId);
+
+            devices.forEach(function (device) {
+
+              expect(device.label).not.toBeNull();
+              expect(device.label).not.toBe("");
+              console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+            });
+            gStream.getTracks().forEach(t => {
+              t.stop();
             });
             done();
-        })
-        .catch(function(err) {
-          console.log(err.name + ": " + err.message);
-          fail();
-        });
-    });
-    it("devices2", (done) => {
-        let gStream;
-        let constraints = {video:{deviceId:undefined}, audio:{deviceId:undefined}} as MediaStreamConstraints;
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream)=>{
-            //if this stream stops the access to labels disapears again after
-            //a few ms (tested in firefox)
-            gStream = stream;
-            navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) 
-            {
-                expect(devices).not.toBeNull();
-                
-                devices.forEach(function(device) {
-
-                expect(device.label).not.toBeNull();
-                expect(device.label).not.toBe("");
-                    console.log(device.kind + ": " + device.label +
-                                " id = " + device.deviceId);
-                });
-                gStream.getTracks().forEach(t => {
-                    t.stop();
-                });
-                done();
-            })
-            .catch(function(err) {
-              console.log(err.name + ": " + err.message);
-              fail();
-            });
-        })
-        .catch((err)=>{
+          })
+          .catch(function (err) {
             console.log(err.name + ": " + err.message);
             fail();
-        });
-    });
+          });
+      })
+      .catch((err) => {
+        console.log(err.name + ": " + err.message);
+        fail();
+      });
+  });
 
 
-    it("devices3", (done) => {
-        let gStream;
-        let constraints = {video: true, audio:false} as MediaStreamConstraints;
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream)=>{
-            //if this stream stops the access to labels disapears again after
-            //a few ms (tested in firefox)
-            gStream = stream;
-            navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) 
-            {
-                expect(devices).not.toBeNull();
-                
-                devices.forEach(function(device) {
+  it("devices3", (done) => {
+    let gStream;
+    let constraints = { video: true, audio: false } as MediaStreamConstraints;
+    mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
+        //if this stream stops the access to labels disapears again after
+        //a few ms (tested in firefox)
+        gStream = stream;
+        mediaDevices.enumerateDevices()
+          .then(function (devices) {
+            expect(devices).not.toBeNull();
 
-                expect(device.label).not.toBeNull();
-                expect(device.label).not.toBe("");
-                    console.log(device.kind + ": " + device.label +
-                                " id = " + device.deviceId);
-                });
-                gStream.getTracks().forEach(t => {
-                    t.stop();
-                });
-                done();
-            })
-            .catch(function(err) {
-              console.log(err.name + ": " + err.message);
-              fail();
+            devices.forEach(function (device) {
+
+              expect(device.label).not.toBeNull();
+              expect(device.label).not.toBe("");
+              console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
             });
-        })
-        .catch((err)=>{
+            gStream.getTracks().forEach(t => {
+              t.stop();
+            });
+            done();
+          })
+          .catch(function (err) {
             console.log(err.name + ": " + err.message);
             fail();
-        });
-    });
-    
+          });
+      })
+      .catch((err) => {
+        console.log(err.name + ": " + err.message);
+        fail();
+      });
+  });
+
 });
 
