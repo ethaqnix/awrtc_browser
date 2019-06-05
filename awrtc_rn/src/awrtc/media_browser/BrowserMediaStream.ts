@@ -65,11 +65,11 @@ export class BrowserMediaStream {
 
   private mInstanceId = 0;
 
-  private mVideoElement: HTMLVideoElement;
+  private mVideoElement: any; //HTMLVideoElement;
   public get VideoElement() {
     return this.mVideoElement;
   }
-  private mCanvasElement: HTMLCanvasElement = null;
+  private mCanvasElement: any /* HTMLCanvasElement */ = null;
   private mIsActive = false;
 
   //Framerate used as a workaround if
@@ -93,7 +93,7 @@ export class BrowserMediaStream {
 
 
 
-  constructor(stream: MediaStream) {
+  constructor(stream: MediaStream, InternalStreamAdded = null) {
     this.mStream = stream;
     this.mInstanceId = BrowserMediaStream.sNextInstanceId;
     BrowserMediaStream.sNextInstanceId++;
@@ -107,6 +107,8 @@ export class BrowserMediaStream {
         this.mMsPerFrame = 1.0 / fps * 1000;
         this.mFrameRateKnown = true;
       }
+      if (InternalStreamAdded)
+        this.InternalStreamAdded = InternalStreamAdded;
     }
 
     this.SetupElements();
@@ -132,31 +134,31 @@ export class BrowserMediaStream {
     //So far it only happens randomly (maybe 1 in 10 tries) on a single test device and only
     //with 720p. (video device "BisonCam, NB Pro" on MSI laptop)
     SLog.L("video element created. video tracks: " + this.mStream.getVideoTracks().length);
-    this.mVideoElement.onloadedmetadata = (e) => {
+    //this.mVideoElement.onloadedmetadata = (e) => { // etha: onloadedmetadata cause no dom manipulation 
+    console.log('onloadedmetadata');
+    //we might have shutdown everything by now already
+    if (this.mVideoElement == null)
+      return;
 
-      //we might have shutdown everything by now already
-      if (this.mVideoElement == null)
-        return;
+    // this.mVideoElement.play();
+    if (this.InternalStreamAdded != null)
+      this.InternalStreamAdded(this);
 
-      this.mVideoElement.play();
-      if (this.InternalStreamAdded != null)
-        this.InternalStreamAdded(this);
+    this.CheckFrameRate();
 
-      this.CheckFrameRate();
+    SLog.L("Resolution: " + this.mVideoElement.videoWidth + "x" + this.mVideoElement.videoHeight);
+    //now create canvas after the meta data of the video are known
+    if (this.mHasVideo) {
+      this.mCanvasElement = this.SetupCanvas();
 
-      SLog.L("Resolution: " + this.mVideoElement.videoWidth + "x" + this.mVideoElement.videoHeight);
-      //now create canvas after the meta data of the video are known
-      if (this.mHasVideo) {
-        this.mCanvasElement = this.SetupCanvas();
-
-        //canvas couldn't be created. set video to false
-        if (this.mCanvasElement == null)
-          this.mHasVideo = false;
-      } else {
-        this.mCanvasElement = null;
-      }
-      this.mIsActive = true;
-    };
+      //canvas couldn't be created. set video to false
+      if (this.mCanvasElement == null)
+        this.mHasVideo = false;
+    } else {
+      this.mCanvasElement = null;
+    }
+    this.mIsActive = true;
+    //};
     //set the src value and trigger onloadedmetadata above
     try {
       //newer method. not yet supported everywhere
@@ -165,7 +167,7 @@ export class BrowserMediaStream {
     }
     catch (error) {
       //old way of doing it. won't work anymore in firefox and possibly other browsers
-      this.mVideoElement.src = window.URL.createObjectURL(this.mStream);
+      //this.mVideoElement.src = window.URL.createObjectURL(this.mStream);
     }
   }
 

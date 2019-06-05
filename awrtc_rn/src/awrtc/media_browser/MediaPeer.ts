@@ -92,13 +92,19 @@ export class MediaPeer extends WebRtcDataPeer {
   }
 
   private SetupStream(stream: MediaStream) {
-    this.mRemoteStream = new BrowserMediaStream(stream);
-    //trigger events once the stream has its meta data available
-    this.mRemoteStream.InternalStreamAdded = (stream) => {
+    // etha: modif cause function trigger before being defined
+    this.mRemoteStream = new BrowserMediaStream(stream, (stream) => {
+      console.log('setupStream mediaPeer l-97');
       if (this.InternalStreamAdded != null) {
         this.InternalStreamAdded(this, stream);
       }
-    };
+    });
+    //trigger events once the stream has its meta data available
+    /*this.mRemoteStream.InternalStreamAdded = (stream) => {
+      if (this.InternalStreamAdded != null) {
+        this.InternalStreamAdded(this, stream);
+      }
+    };*/
   }
 
   public TryGetRemoteFrame(): IFrameData {
@@ -114,18 +120,18 @@ export class MediaPeer extends WebRtcDataPeer {
   }
 
   public AddLocalStream(stream: MediaStream) {
-
-
-    if (MediaPeer.sUseObsolete) {
+    console.log('AddLocalStream MediaPeer l-123');
+    this.mPeer.addStream(stream) // etha: addTrack not implemented on react-native-webview
+    /*if (MediaPeer.sUseObsolete) {
       (this.mPeer as RTCPeerConnectionObsolete).addStream(stream);
     }
     else {
-      this.mPeer.addStream(stream) // etha: addTrack not implemented on react-native-webview
-      /*for(let v of stream.getTracks())
+      console.log('ADD STREAM');
+      for(let v of stream.getTracks())
       {
           this.mPeer.addTrack(v, stream);
-      }*/
-    }
+      }
+  }*/
 
   }
 

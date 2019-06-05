@@ -8,10 +8,12 @@ class TestCall extends React.Component {
   mIntervalId: any = -1;
   mLocalVideo: any = null;
   mRemoteVideo: any = {};
-  mIsRunning: boolean = false;
   mAddress: string = 'KORJXWP';
   state = {
+    address: 'qsdf',
     callStarted: false,
+    mIsRunning: false
+
   }
 
   constructor(props: {}) {
@@ -28,7 +30,7 @@ class TestCall extends React.Component {
   Start(address, audio, video) {
     if (this.mCall != null)
       this.Stop();
-    this.mIsRunning = true;
+    this.setState({ mIsRunning: true })
     //this.Ui_OnStart();
     console.log("start");
     console.log("Using signaling server url: " + this.mNetConfig.SignalingUrl);
@@ -75,7 +77,8 @@ class TestCall extends React.Component {
       this.mCall = null;
       clearInterval(this.mIntervalId);
       this.mIntervalId = -1;
-      this.mIsRunning = false;
+      this.setState({ mIsRunning: false })
+
       this.mLocalVideo = null;
       this.mRemoteVideo = {};
     }
@@ -94,12 +97,14 @@ class TestCall extends React.Component {
       console.log("configuration complete");
     }
     else if (args.Type == awrtc.CallEventType.MediaUpdate) {
+      console.log(args);
       let margs = args;
       if (this.mLocalVideo == null && margs.ConnectionId == awrtc.ConnectionId.INVALID) {
         var videoElement = margs.VideoElement;
         this.mLocalVideo = videoElement;
         //this.Ui_OnLocalVideo(videoElement);
         console.log("local video added resolution:" + videoElement.videoWidth + videoElement.videoHeight + " fps: ??");
+        console.log(args.mVideoElement);
       }
       else if (margs.ConnectionId != awrtc.ConnectionId.INVALID && this.mRemoteVideo[margs.ConnectionId.id] == null) {
         var videoElement = margs.VideoElement;
@@ -164,8 +169,13 @@ class TestCall extends React.Component {
   render() {
     return (
       <Button
-        title={this.state.callStarted ? 'off' : 'on'}
-        onPress={() => this.Start('kapo', true, true)}
+        title={this.state.mIsRunning ? 'off' : 'on'}
+        onPress={() => {
+          if (!this.state.mIsRunning)
+            this.Start(this.state.address, true, false);
+          else
+            this.Stop();
+        }}
       >
 
       </Button>

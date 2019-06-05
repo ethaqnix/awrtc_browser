@@ -531,6 +531,7 @@ export class AWebRtcCall implements ICall {
     this.TriggerCallEvent(args);
   }
   private MediaEventToCallEvent(evt: MediaEvent) {
+    console.log('MediaEventToCallEvent AWebRtcCall l-534');
     let videoElement: HTMLVideoElement = null;
     if (evt.EventType == evt.EventType) {
       let args = new MediaUpdatedEventArgs(evt.ConnectionId, evt.Args as HTMLVideoElement);

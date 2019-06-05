@@ -204,10 +204,13 @@ export class BrowserMediaNetwork extends WebRtcNetwork implements IMediaNetwork 
           DeviceApi.Update();
 
           //call worked -> setup a frame buffer that deals with the rest
-          this.mLocalStream = new BrowserMediaStream(stream as MediaStream);
-          this.mLocalStream.InternalStreamAdded = (stream) => {
+          this.mLocalStream = new BrowserMediaStream(stream as MediaStream, (stream) => {
+            console.log('received stream BrowserMediaNetwork l-208');
+            this.EnqueueMediaEvent(MediaEventType.StreamAdded, ConnectionId.INVALID, stream/*this.mLocalStream.VideoElement*/);
+          });
+          /* this.mLocalStream.InternalStreamAdded = (stream) => {
             this.EnqueueMediaEvent(MediaEventType.StreamAdded, ConnectionId.INVALID, this.mLocalStream.VideoElement);
-          };
+          };*/
 
           //unlike native version this one will happily play the local sound causing an echo
           //set to mute
